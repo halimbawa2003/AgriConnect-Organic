@@ -174,7 +174,19 @@
 
         (order.items || []).forEach(item => {
             const li = document.createElement("li");
-            li.textContent = `${item.title} — ${item.qty} ${item.unit} (₱${(item.price * item.qty).toFixed(2)})`;
+            li.style.display = "flex";
+            li.style.justifyContent = "space-between";
+            li.style.margin = "6px 0";
+
+            const nameSpan = document.createElement("span");
+            nameSpan.textContent = `${item.title} — ${item.qty} ${item.unit}`;
+
+            const priceSpan = document.createElement("strong");
+            priceSpan.textContent = `₱${(item.price * item.qty).toFixed(2)}`;
+
+            li.appendChild(nameSpan);
+            li.appendChild(priceSpan);
+
             list.appendChild(li);
         });
     </script>
