@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
+    <title>AgriConnect Organic — Products</title>
+    <link rel='stylesheet' href='style.css'>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.href='index.html'"><img src="assets/siteLogo.png" alt="AgriConnect Organic" />
+            <div style="display:flex;flex-direction:column;line-height:1">
+                <div class="site-name" style="font-weight:700"></div>
+                <div class="site-tagline small" style="opacity:0.9"></div>
+            </div>
+        </div>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+    <main class="container">
+        <section class="card">
+            <h2 data-i18n="products">Products</h2>
+            <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:12px"><input id="search-term"
+                    placeholder="Search products..." /><select id="filter-cat">
+                    <option value="">All categories</option>
+                    <option>Root</option>
+                    <option>Vegetable</option>
+                    <option>Leafy</option>
+                    <option>Protein</option>
+                </select><select id="sort-by">
+                    <option value="new">Newest</option>
+                    <option value="price-asc">Price (low → high)</option>
+                    <option value="price-desc">Price (high → low)</option>
+                    <option value="popular">Popularity</option>
+                </select><button class="btn" onclick="applyProductsFilter()">Apply</button></div>
+        </section>
+        <section style="margin-top:12px" class="grid cols-3 card" id="product-grid"></section>
+    </main>
+    <footer class="site-footer">
+        <div>© <span id="year"></span> <span class="site-name"></span> — All produce certified organic (OCCP)</div>
+        <div class="lang-toggle">🌐 <span data-i18n="language">Language</span>: <a href="#" class="lang-switch"
+                data-lang="en" style="margin-left:8px">English</a> | <a href="#" class="lang-switch" data-lang="fil"
+                style="margin-left:8px">Filipino</a></div>
+    </footer>
+    <script src='script.js'></script>
+    <script>
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const products = [
+            {
+                id: 'p1',
+                title: 'Organic Carrots (local)',
+                seller: 'GreenHarvest',
+                price: 120,
+                unit: 'kg',
+                img: 'assets/carrots.png',
+                category: 'Root',
+                popularity: 80,
+                created: '2025-10-10'
+            },
+            {
+                id: 'p2',
+                title: 'Organic Tomatoes',
+                seller: 'SunFarm',
+                price: 160,
+                unit: 'kg',
+                img: 'assets/tomatoes.png',
+                category: 'Vegetable',
+                popularity: 120,
+                created: '2025-10-18'
+            },
+            {
+                id: 'p3',
+                title: 'Organic Spinach (bunch)',
+                seller: 'LeafyCo',
+                price: 90,
+                unit: 'kg',
+                img: 'assets/spinach.png',
+                category: 'Leafy',
+                popularity: 60,
+                created: '2025-09-20'
+            },
+            {
+                id: 'p4',
+                title: 'Organic Eggs (dozen)',
+                seller: 'HappyHens',
+                price: 180,
+                unit: 'dozen',
+                img: 'assets/eggs.png',
+                category: 'Protein',
+                popularity: 150,
+                created: '2025-10-20'
+            },
+            {
+                id: 'p5',
+                title: 'Organic Potatoes',
+                seller: 'RootFarm',
+                price: 110,
+                unit: 'kg',
+                img: 'assets/potatoes.png',
+                category: 'Root',
+                popularity: 70,
+                created: '2025-10-15'
+            },
+            {
+                id: 'p6',
+                title: 'Organic Lettuce',
+                seller: 'LeafyCo',
+                price: 95,
+                unit: 'kg',
+                img: 'assets/lettuce.png',
+                category: 'Leafy',
+                popularity: 90,
+                created: '2025-10-05'
+            }
+        ];
+
+        // Build a single product card
+        function cardProduct(p) {
+            return `
+        <div class="card product">
+            <img src="${p.img}" alt="${p.title}" />
+            <div class="meta">
+                <div style="display:flex;justify-content:space-between;align-items:start">
+                    <div>
+                        <div style="font-weight:700">${p.title}</div>
+                        <div class="small">by ${p.seller} — ${p.category}</div>
+                    </div>
+                    <div style="text-align:right">
+                        <div style="font-weight:700">₱${p.price}</div>
+                        <div class="small">/${p.unit}</div>
+                    </div>
+                </div>
+                <div style="margin-top:8px;display:flex;gap:8px">
+                    <button class="btn" onclick="location.href='product.html?id=${p.id}'">View</button>
+                </div>
+            </div>
+        </div>
+    `;
+        }
+
+        // Render a list of products
+        function renderList(list) {
+            document.getElementById('product-grid').innerHTML = list.map(cardProduct).join('');
+        }
+
+        // Initial render
+        renderList(products);
+
+        applyTranslations();
+        updateCartCount();
+
+        // Filter, search, and sort products
+        function applyProductsFilter() {
+            const term = document.getElementById('search-term').value.toLowerCase();
+            const cat = document.getElementById('filter-cat').value;
+            const sort = document.getElementById('sort-by').value;
+
+            let list = products.slice();
+
+            if (term) {
+                list = list.filter(p =>
+                    p.title.toLowerCase().includes(term) || p.seller.toLowerCase().includes(term)
+                );
+            }
+
+            if (cat) {
+                list = list.filter(p => p.category === cat);
+            }
+
+            if (sort === 'price-asc') list.sort((a, b) => a.price - b.price);
+            if (sort === 'price-desc') list.sort((a, b) => b.price - a.price);
+            if (sort === 'popular') list.sort((a, b) => b.popularity - a.popularity);
+            if (sort === 'new') list.sort((a, b) => new Date(b.created) - new Date(a.created));
+
+            renderList(list);
+        }
+    </script>
+
+</body>
+
+</html>

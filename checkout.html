@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
+    <title>AgriConnect Organic — Checkout</title>
+    <link rel='stylesheet' href='style.css'>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.href='index.html'"><img src="assets/siteLogo.png"
+                alt="AgriConnect Organic" />
+            <div style="display:flex;flex-direction:column;line-height:1">
+                <div class="site-name" style="font-weight:700"></div>
+                <div class="site-tagline small" style="opacity:0.9"></div>
+            </div>
+        </div>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+    <main class='container'>
+        <section class='card' style='max-width:720px;margin:0 auto'>
+            <h2 data-i18n='checkout'>Checkout</h2>
+            <form id='checkout-form'><label data-i18n='paymentMethod'>Mode of payment</label><select id='payment-method'
+                    required>
+                    <option value='gcash'>GCash</option>
+                    <option value='card'>Credit/Debit Card</option>
+                    <option value='cod'>Cash on Delivery (COD)</option>
+                </select><label data-i18n='address'>Delivery address</label><textarea id='delivery-address' rows='4'
+                    placeholder='' required></textarea>
+                <div style='display:flex;gap:8px;margin-top:12px'><button class='btn' type='submit'
+                        data-i18n='placeOrder'>Place Order</button><button type='button' class='btn secondary'
+                        onclick="location.href='cart.html'">Back to cart</button></div>
+            </form>
+        </section>
+    </main>
+    <footer class="site-footer">
+        <div>© <span id="year"></span> <span class="site-name"></span> — All produce certified organic (OCCP)</div>
+        <div class="lang-toggle">🌐 <span data-i18n="language">Language</span>: <a href="#" class="lang-switch"
+                data-lang="en" style="margin-left:8px">English</a> | <a href="#" class="lang-switch" data-lang="fil"
+                style="margin-left:8px">Filipino</a></div>
+    </footer>
+    <script src='script.js'></script>
+    <script>
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        applyTranslations();
+        updateCartCount();
+
+        document.getElementById('checkout-form').addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const current = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+            if (!current) {
+                showToast(t('needSignIn'));
+                location.href = 'login.html';
+                return;
+            }
+
+            const method = document.getElementById('payment-method').value;
+            const addr = document.getElementById('delivery-address').value.trim();
+
+            if (!addr) {
+                showToast('Please enter delivery address');
+                return;
+            }
+
+            const cart = getCart();
+
+            const order = {
+                orderId: "ORD-" + Date.now(),
+                orderTime: new Date().toLocaleString(),
+                paymentMethod: method,
+                address: addr,
+                items: cart.items,
+                deliveryFee: 50,
+                total: cart.items.reduce((sum, item) => sum + item.price * item.qty, 0) + 50
+            };
+
+            localStorage.setItem("latestOrder", JSON.stringify(order));
+
+            // clear the cart AFTER saving order
+            localStorage.removeItem("agri_cart");
+            updateCartCount();
+
+            showToast("Order placed successfully");
+
+            setTimeout(() => {
+                location.href = "order-summary.html";
+            }, 300);
+        });
+
+
+
+    </script>
+
+</body>
+
+</html>

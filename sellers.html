@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
+    <title>AgriConnect Organic — Sellers</title>
+    <link rel='stylesheet' href='style.css'>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.href='index.html'"><img src="assets/siteLogo.png" alt="AgriConnect Organic" />
+            <div style="display:flex;flex-direction:column;line-height:1">
+                <div class="site-name" style="font-weight:700"></div>
+                <div class="site-tagline small" style="opacity:0.9"></div>
+            </div>
+        </div>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+    <main class='container'>
+        <section class='card'>
+            <h2 data-i18n='sellers'>Sellers</h2>
+            <div style='margin-top:8px;display:flex;gap:8px'><input id='seller-search'
+                    placeholder='Search sellers...' /><button class='btn' onclick='applySellerSearch()'>Search</button>
+            </div>
+        </section>
+        <section style='margin-top:12px' class='list card' id='seller-list'></section>
+    </main>
+    <footer class="site-footer">
+        <div>© <span id="year"></span> <span class="site-name"></span> — All produce certified organic (OCCP)</div>
+        <div class="lang-toggle">🌐 <span data-i18n="language">Language</span>: <a href="#" class="lang-switch"
+                data-lang="en" style="margin-left:8px">English</a> | <a href="#" class="lang-switch" data-lang="fil"
+                style="margin-left:8px">Filipino</a></div>
+    </footer>
+    <script src='script.js'></script>
+    <script>
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const sellers = [
+            {
+                id: 's1',
+                name: 'GreenHarvest',
+                bio: 'Smallholder cooperative producing root crops.',
+                img: 'assets/GreenHarvest.png',
+                occp: 'OCCP-2024-001',
+                joined: '2025-09-01'
+            },
+            {
+                id: 's2',
+                name: 'SunFarm',
+                bio: 'Family farm focusing on tomatoes and peppers.',
+                img: 'assets/SunFarm.png',
+                occp: 'OCCP-2025-078',
+                joined: '2025-06-12'
+            },
+            {
+                id: 's3',
+                name: 'RootFarm',
+                bio: 'Organic root vegetable farm.',
+                img: 'assets/RootFarm.png',
+                occp: 'OCCP-2025-034',
+                joined: '2025-09-15'
+            },
+            {
+                id: 's4',
+                name: 'LeafyCo',
+                bio: 'Urban farm specializing in leafy greens.',
+                img: 'assets/LeafyCo.png',
+                occp: 'OCCP-2024-115',
+                joined: '2025-10-05'
+            },
+        ];
+
+        function renderSellers(list) {
+            document.getElementById('seller-list').innerHTML = list
+                .map(function (s) {
+                    return `
+                <div class="seller" style="justify-content:space-between">
+                    <div style="display:flex;gap:12px;align-items:center">
+                        <img src="${s.img}" alt="${s.name}" />
+                        <div>
+                            <div style="font-weight:700">${s.name}</div>
+                            <div class="small">${s.bio}</div>
+                        </div>
+                    </div>
+                    <div style="text-align:right">
+                        <div class="small">OCCP: ${s.occp}</div>
+                        <div style="margin-top:8px">
+                            <button class="btn" onclick="location.href='seller_profile.html?id=${s.id}'">Profile</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+                })
+                .join('');
+        }
+
+        renderSellers(sellers);
+
+        applyTranslations();
+        updateCartCount();
+
+        function applySellerSearch() {
+            const q = document.getElementById('seller-search').value.toLowerCase();
+            const list = sellers.filter(
+                s => s.name.toLowerCase().includes(q) || s.bio.toLowerCase().includes(q)
+            );
+            renderSellers(list);
+        }
+
+    </script>
+
+</body>
+
+</html>

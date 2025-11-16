@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
+    <title>AgriConnect Organic — Seller Profile</title>
+    <link rel='stylesheet' href='style.css'>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.href='index.html'"><img src="assets/siteLogo.png" alt="AgriConnect Organic" />
+            <div style="display:flex;flex-direction:column;line-height:1">
+                <div class="site-name" style="font-weight:700"></div>
+                <div class="site-tagline small" style="opacity:0.9"></div>
+            </div>
+        </div>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+    <main class='container' id='app'></main>
+    <footer class="site-footer">
+        <div>© <span id="year"></span> <span class="site-name"></span> — All produce certified organic (OCCP)</div>
+        <div class="lang-toggle">🌐 <span data-i18n="language">Language</span>: <a href="#" class="lang-switch"
+                data-lang="en" style="margin-left:8px">English</a> | <a href="#" class="lang-switch" data-lang="fil"
+                style="margin-left:8px">Filipino</a></div>
+    </footer>
+    <script src='script.js'></script>
+    <script>
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const sellers = [
+            {
+                id: 's1',
+                name: 'GreenHarvest',
+                bio: 'Smallholder cooperative producing root crops.',
+                img: 'assets/GreenHarvest.png',
+                occp: 'OCCP-2024-001',
+                joined: '2025-09-01'
+            },
+            {
+                id: 's2',
+                name: 'SunFarm',
+                bio: 'Family farm focusing on tomatoes and peppers.',
+                img: 'assets/SunFarm.png',
+                occp: 'OCCP-2025-078',
+                joined: '2025-06-12'
+            },
+            {
+                id: 's3',
+                name: 'RootFarm',
+                bio: 'Organic root vegetable farm.',
+                img: 'assets/RootFarm.png',
+                occp: 'OCCP-2025-034',
+                joined: '2025-09-15'
+            },
+            {
+                id: 's4',
+                name: 'LeafyCo',
+                bio: 'Urban farm specializing in leafy greens.',
+                img: 'assets/LeafyCo.png',
+                occp: 'OCCP-2024-115',
+                joined: '2025-10-05'
+            },
+        ];
+
+        const products = [
+            {
+                id: 'p1',
+                title: 'Organic Carrots (local)',
+                seller: 'GreenHarvest',
+                price: 120,
+                unit: 'kg',
+                img: 'assets/carrots.png',
+                category: 'Root',
+                popularity: 80,
+                created: '2025-10-10'
+            },
+            {
+                id: 'p2',
+                title: 'Organic Tomatoes',
+                seller: 'SunFarm',
+                price: 160,
+                unit: 'kg',
+                img: 'assets/tomatoes.png',
+                category: 'Vegetable',
+                popularity: 120,
+                created: '2025-10-18'
+            },
+            {
+                id: 'p3',
+                title: 'Organic Spinach (bunch)',
+                seller: 'LeafyCo',
+                price: 90,
+                unit: 'kg',
+                img: 'assets/spinach.png',
+                category: 'Leafy',
+                popularity: 60,
+                created: '2025-09-20'
+            },
+            {
+                id: 'p4',
+                title: 'Organic Eggs (dozen)',
+                seller: 'HappyHens',
+                price: 180,
+                unit: 'dozen',
+                img: 'assets/eggs.png',
+                category: 'Protein',
+                popularity: 150,
+                created: '2025-10-20'
+            },
+            {
+                id: 'p5',
+                title: 'Organic Potatoes',
+                seller: 'RootFarm',
+                price: 110,
+                unit: 'kg',
+                img: 'assets/potatoes.png',
+                category: 'Root',
+                popularity: 70,
+                created: '2025-10-15'
+            },
+            {
+                id: 'p6',
+                title: 'Organic Lettuce',
+                seller: 'LeafyCo',
+                price: 95,
+                unit: 'kg',
+                img: 'assets/lettuce.png',
+                category: 'Leafy',
+                popularity: 90,
+                created: '2025-10-05'
+            }
+        ];
+
+        function qsParam(name) {
+            const p = new URLSearchParams(location.search);
+            return p.get(name);
+        }
+
+        const sid = qsParam('id') || location.hash.replace('#', '') || 's1';
+        const s = sellers.find(x => x.id === sid) || sellers[0];
+        const sellerProducts = products.filter(p => p.seller === s.name);
+
+        document.getElementById('app').innerHTML = `
+<section class='card'>
+    <div style='display:flex;gap:18px;align-items:center'>
+        <img src='${s.img}' style='width:120px;height:120px;border-radius:14px;object-fit:cover' />
+        <div>
+            <h2 style='margin:0'>${s.name}</h2>
+            <div class='small'>${s.bio}</div>
+            <div style='margin-top:8px' class='small'>
+                OCCP certificate: <strong>${s.occp}</strong>
+            </div>
+        </div>
+        <div style='margin-left:auto;text-align:right'>
+            <div class='small'>Joined ${s.joined}</div>
+        </div>
+    </div>
+</section>
+
+<section style='margin-top:12px' class='card'>
+    <h3>Products from ${s.name}</h3>
+    <div class='list'>
+        ${sellerProducts.length
+                ? sellerProducts
+                    .map(function (p) {
+                        return `
+                            <div class="product">
+                                <img src="${p.img}" />
+                                <div class="meta">
+                                    <div style="font-weight:700">${p.title}</div>
+                                    <div class="small">₱${p.price}/${p.unit}</div>
+                                    <div style="margin-top:8px">
+                                        <button class="btn" onclick="location.href='product.html?id=${p.id}'">View</button>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    })
+                    .join('')
+                : '<div class="small">No active listings yet.</div>'
+            }
+    </div>
+</section>
+
+<section style='margin-top:12px' class='card'>
+    <h4>OCCP Certificate</h4>
+    <img src='assets/occp1.png' style='width:320px;border-radius:8px' />
+</section>
+`;
+
+        applyTranslations();
+        updateCartCount();
+
+    </script>
+
+</body>
+
+</html>

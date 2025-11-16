@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - AgriConnect Organic</title>
+    <style>
+        body { font-family: Arial; background:#f7f2df; margin:0; padding:0; }
+        .container { width: 350px; margin: 70px auto; padding:25px; background:white; border-radius:10px; }
+        input { width:100%; padding:10px; margin:7px 0; }
+        button { width:100%; padding:10px; background:#2f855a; color:white; border:none; border-radius:5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Log in to AgriConnect Organic</h2>
+
+    <input type="email" id="email" placeholder="Email">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="loginUser()">Login</button>
+
+    <p>Don't have an account? <a href="signup.html">Sign up</a></p>
+</div>
+
+<script>
+function loginUser() {
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value.trim();
+
+    let users = JSON.parse(localStorage.getItem("agriconnect_users")) || [];
+
+    let userFound = users.find(u => u.email === email && u.password === pass);
+
+    if (!userFound) {
+        alert("Incorrect email or password.");
+        return;
+    }
+
+    localStorage.setItem("agriconnect_current_user", JSON.stringify(userFound));
+    window.location.href = "home.html";
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Order Summary | AgriConnect Organic</title>
+    <style>
+        body {
+            font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f4f6f1;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2f855a;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.8rem;
+            font-weight: bold;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: #333;
+        }
+
+        .summary-section {
+            margin-bottom: 20px;
+        }
+
+        .summary-section h3 {
+            border-bottom: 2px solid #e0e0e0;
+            padding-bottom: 8px;
+            color: #555;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin: 8px 0;
+        }
+
+        .summary-item span {
+            font-size: 1rem;
+        }
+
+        .summary-item strong {
+            color: #333;
+        }
+
+        .total {
+            border-top: 2px solid #ccc;
+            margin-top: 20px;
+            padding-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #222;
+        }
+
+        .btn {
+            display: block;
+            width: 100%;
+            text-align: center;
+            background-color: #2f855a;
+            color: white;
+            text-decoration: none;
+            padding: 12px;
+            margin-top: 25px;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: background 0.3s ease;
+        }
+
+        .btn:hover {
+            background-color: #2f855a;
+        }
+
+        footer {
+            text-align: center;
+            padding: 15px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header>Thank you for ordering!</header>
+
+    <div class="container">
+        <h2>Order Receipt</h2>
+
+        <div class="summary-section">
+            <h3>Transaction Details</h3>
+            <div class="summary-item"><span>Order ID:</span><strong id="order-id"></strong></div>
+            <div class="summary-item"><span>Order Time:</span><strong id="order-time"></strong></div>
+            <div class="summary-item"><span>Payment Method:</span><strong id="payment-method"></strong></div>
+        </div>
+
+        <div class="summary-section">
+            <h3>Products Ordered</h3>
+            <ul id="order-items"></ul>
+        </div>
+
+        <div class="summary-section">
+            <h3>Fees</h3>
+            <div class="summary-item"><span>Delivery Fee:</span><strong>₱50.00</strong></div>
+            <div class="summary-item total"><span>Total:</span><strong>₱<span id="total"></span></strong></div>
+        </div>
+
+        <a href="home.html" class="btn">Return to Homepage</a>
+    </div>
+
+    <footer>
+        © 2025 AgriConnect Organic. All rights reserved.
+    </footer>
+
+    <!--    <script>
+        // Display current date and time for order
+        document.getElementById("orderTime").textContent = new Date().toLocaleString();
+    </script> -->
+    <script>
+        const order = JSON.parse(localStorage.getItem("latestOrder") || "{}");
+
+        document.getElementById("order-id").textContent = order.orderId || "N/A";
+        document.getElementById("order-time").textContent = order.orderTime || "N/A";
+        document.getElementById("payment-method").textContent = order.paymentMethod || "N/A";
+
+        document.getElementById("total").textContent = order.total?.toFixed(2) || "0.00";
+
+        const list = document.getElementById("order-items");
+        list.innerHTML = "";
+
+        (order.items || []).forEach(item => {
+            const li = document.createElement("li");
+            li.textContent = `${item.title} — ${item.qty} ${item.unit} (₱${(item.price * item.qty).toFixed(2)})`;
+            list.appendChild(li);
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang='en'>
+
+<head>
+    <meta charset='utf-8' />
+    <meta name='viewport' content='width=device-width,initial-scale=1' />
+    <title>AgriConnect Organic — Product</title>
+    <link rel='stylesheet' href='style.css'>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo" onclick="location.href='index.html'"><img src="assets/siteLogo.png" alt="AgriConnect Organic" />
+            <div style="display:flex;flex-direction:column;line-height:1">
+                <div class="site-name" style="font-weight:700"></div>
+                <div class="site-tagline small" style="opacity:0.9"></div>
+            </div>
+        </div>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+    <main class='container' id='app'></main>
+    <footer class="site-footer">
+        <div>© <span id="year"></span> <span class="site-name"></span> — All produce certified organic (OCCP)</div>
+        <div class="lang-toggle">🌐 <span data-i18n="language">Language</span>: <a href="#" class="lang-switch"
+                data-lang="en" style="margin-left:8px">English</a> | <a href="#" class="lang-switch" data-lang="fil"
+                style="margin-left:8px">Filipino</a></div>
+    </footer>
+    <script src='script.js'></script>
+    <script>
+
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        const products = [
+            {
+                id: 'p1',
+                title: 'Organic Carrots (local)',
+                seller: 'GreenHarvest',
+                price: 120,
+                unit: 'kg',
+                img: 'assets/carrots.png',
+                category: 'Root',
+                popularity: 80,
+                created: '2025-10-10'
+            },
+            {
+                id: 'p2',
+                title: 'Organic Tomatoes',
+                seller: 'SunFarm',
+                price: 160,
+                unit: 'kg',
+                img: 'assets/tomatoes.png',
+                category: 'Vegetable',
+                popularity: 120,
+                created: '2025-10-18'
+            },
+            {
+                id: 'p3',
+                title: 'Organic Spinach (bunch)',
+                seller: 'LeafyCo',
+                price: 90,
+                unit: 'kg',
+                img: 'assets/spinach.png',
+                category: 'Leafy',
+                popularity: 60,
+                created: '2025-09-20'
+            },
+            {
+                id: 'p4',
+                title: 'Organic Eggs (dozen)',
+                seller: 'HappyHens',
+                price: 180,
+                unit: 'dozen',
+                img: 'assets/eggs.png',
+                category: 'Protein',
+                popularity: 150,
+                created: '2025-10-20'
+            },
+            {
+                id: 'p5',
+                title: 'Organic Potatoes',
+                seller: 'RootFarm',
+                price: 110,
+                unit: 'kg',
+                img: 'assets/potatoes.png',
+                category: 'Root',
+                popularity: 70,
+                created: '2025-10-15'
+            },
+            {
+                id: 'p6',
+                title: 'Organic Lettuce',
+                seller: 'LeafyCo',
+                price: 95,
+                unit: 'kg',
+                img: 'assets/lettuce.png',
+                category: 'Leafy',
+                popularity: 90,
+                created: '2025-10-05'
+            }
+        ];
+
+        const sellers = [
+            {
+                id: 's1',
+                name: 'GreenHarvest',
+                bio: 'Smallholder cooperative producing root crops.',
+                img: 'assets/GreenHarvest.png',
+                occp: 'OCCP-2024-001',
+                joined: '2025-09-01'
+            },
+            {
+                id: 's2',
+                name: 'SunFarm',
+                bio: 'Family farm focusing on tomatoes and peppers.',
+                img: 'assets/SunFarm.png',
+                occp: 'OCCP-2025-078',
+                joined: '2025-06-12'
+            },
+            {
+                id: 's3',
+                name: 'RootFarm',
+                bio: 'Organic root vegetable farm.',
+                img: 'assets/RootFarm.png',
+                occp: 'OCCP-2025-034',
+                joined: '2025-09-15'
+            },
+            {
+                id: 's4',
+                name: 'LeafyCo',
+                bio: 'Urban farm specializing in leafy greens.',
+                img: 'assets/LeafyCo.png',
+                occp: 'OCCP-2024-115',
+                joined: '2025-10-05'
+            },
+        ];
+
+        function qsParam(name) {
+            const p = new URLSearchParams(location.search);
+            return p.get(name);
+        }
+
+        const pid = qsParam('id') || 'p1';
+        const p = products.find(x => x.id === pid) || products[0];
+        const seller = sellers.find(s => s.name === p.seller) || sellers[0];
+
+        document.getElementById('app').innerHTML = `
+<section class='card product-page'>
+    <div>
+        <img src='${p.img}' alt='${p.title}' style='width:100%;height:360px;object-fit:cover;border-radius:12px' />
+        <h2 style='margin-top:12px'>${p.title}</h2>
+        <div class='small'>by <a href='sellers.html#${seller.id}'>${p.seller}</a></div>
+        <p style='margin-top:8px'>Category: ${p.category} · Popularity: ${p.popularity}</p>
+        <div style='margin-top:12px'><strong>Price: ₱${p.price}</strong> <span class='small'>/${p.unit}</span></div>
+        <div style='margin-top:12px'>
+            <label data-i18n='Quantity (kg): '>Quantity (kg):</label>
+            <input id='qty-kg' type='number' min='0.1' step='0.1' value='1' style='width:120px;padding:8px;border-radius:8px;border:1px solid #ddd' />
+            <div style='margin-top:12px'>
+                <button class='btn' id='add-to-cart-btn'>Add to cart</button>
+            </div>
+        </div>
+    </div>
+    <aside class='card'>
+        <h3>Seller</h3>
+        <div style='display:flex;gap:12px;align-items:center'>
+            <img src='${seller.img}' style='width:72px;height:72px;border-radius:10px;object-fit:cover' />
+            <div>
+                <div style='font-weight:700'>${seller.name}</div>
+                <div class='small'>OCCP: ${seller.occp}</div>
+            </div>
+        </div>
+        <div style='margin-top:12px'>
+            Traceability:
+            <div class='small'>Batch: #${p.id.toUpperCase()} - Harvest ${p.created}</div>
+        </div>
+    </aside>
+</section>
+
+<section style='margin-top:12px' class='card'>
+    <h4>Recommendations</h4>
+    <div class='recommendations'>
+        ${products
+                .filter(x => x.id !== p.id)
+                .slice(0, 3)
+                .map(r => `
+                <div class='card' style='text-align:center'>
+                    <img src='${r.img}' style='width:100%;height:120px;object-fit:cover;border-radius:8px' />
+                    <div style='margin-top:8px;font-weight:700'>${r.title}</div>
+                    <div class='small'>₱${r.price}/${r.unit}</div>
+                    <div style='margin-top:6px'>
+                        <button class='btn' onclick="location.href='product.html?id=${r.id}'">View</button>
+                    </div>
+                </div>
+            `).join('')}
+    </div>
+</section>
+`;
+
+        applyTranslations();
+        updateCartCount();
+
+        document.getElementById('add-to-cart-btn').addEventListener('click', function () {
+            const qty = parseFloat(document.getElementById('qty-kg').value || 1);
+
+            if (!currentUser()) {
+                showToast(t('needSignIn'));
+                location.href = 'login.html';
+                return;
+            }
+
+            const c = getCart();
+            const existing = c.items.find(i => i.id === p.id);
+
+            if (existing) {
+                existing.qty = parseFloat((existing.qty + qty).toFixed(2));
+            } else {
+                c.items.push({
+                    id: p.id,
+                    title: p.title,
+                    price: p.price,
+                    unit: p.unit,
+                    qty: qty
+                });
+            }
+
+            saveCart(c);
+            showToast('Added to cart');
+        });
+
+    </script>
+
+</body>
+
+</html>

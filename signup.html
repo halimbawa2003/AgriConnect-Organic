@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Sign Up - AgriConnect Organic</title>
+    <style>
+        body { font-family: Arial; background:#f7f2df; margin:0; padding:0; }
+        .container { width: 350px; margin: 70px auto; padding:25px; background:white; border-radius:10px; }
+        input { width:100%; padding:10px; margin:7px 0; }
+        button { width:100%; padding:10px; background:#2f855a; color:white; border:none; border-radius:5px; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Create your AgriConnect Organic Account</h2>
+
+    <input type="text" id="fullname" placeholder="Full Name">
+    <input type="email" id="email" placeholder="Email Address">
+    <input type="password" id="password" placeholder="Password">
+
+    <button onclick="signupUser()">Sign Up</button>
+
+    <p>Already have an account? <a href="login.html">Login</a></p>
+</div>
+
+<script>
+function signupUser() {
+    const fullname = document.getElementById("fullname").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const pass = document.getElementById("password").value.trim();
+
+    if (!fullname || !email || !pass) {
+        alert("Please complete all fields.");
+        return;
+    }
+
+    let users = JSON.parse(localStorage.getItem("agriconnect_users")) || [];
+
+    if (users.some(u => u.email === email)) {
+        alert("This email is already registered.");
+        return;
+    }
+
+    const newUser = { fullname, email, password: pass };
+
+    users.push(newUser);
+    localStorage.setItem("agriconnect_users", JSON.stringify(users));
+
+    alert("Account created successfully!");
+    window.location.href = "login.html";
+}
+</script>
+
+</body>
+</html>

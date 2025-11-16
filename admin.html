@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgriConnect Organic | Seller Admin</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f2df;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        header {
+            background-color: #2f855a;
+            color: #fff;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        nav a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+
+        .container {
+            padding: 2rem;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
+        }
+
+        .card h2 {
+            color: #2f855a;
+            margin-top: 0;
+        }
+
+        .profile-pic {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            background-color: #ddd;
+            margin-bottom: 10px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+        }
+
+        .product-card {
+            background-color: #f7f2df;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .product-card img {
+            width: 100%;
+            border-radius: 8px;
+            height: 100px;
+            object-fit: cover;
+        }
+
+        .footer {
+            background-color: #2f855a;
+            color: white;
+            text-align: center;
+            padding: 1rem;
+            margin-top: 2rem;
+        }
+
+        .translate {
+            margin-top: 1rem;
+        }
+
+        button {
+            background-color: #2f855a;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #42173f;
+        }
+    </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const navbarUserArea = document.getElementById("navbar-user-area");
+            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
+
+            function renderNavbar() {
+                if (currentUser) {
+                    navbarUserArea.innerHTML = `
+                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
+                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
+            `;
+
+                    document.getElementById("logoutBtn").onclick = function () {
+                        localStorage.removeItem("agriconnect_current_user");
+                        window.location.reload();
+                    };
+                } else {
+                    navbarUserArea.innerHTML = `
+                <a href="login.html">Login</a>
+                <a href="signup.html">Sign Up</a>
+            `;
+                }
+            }
+
+            renderNavbar();
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <h1>Seller Admin Dashboard</h1>
+        <nav style="background:#2f855a; padding:12px; color:white; display:flex; justify-content:space-between;">
+            <div>
+                <a href="home.html" style="color:white; text-decoration:none; margin-right:20px;">Home</a>
+                <a href="products.html" style="color:white; text-decoration:none; margin-right:20px;">Products</a>
+                <a href="sellers.html" style="color:white; text-decoration:none; margin-right:20px;">Sellers</a>
+                <a href="cart.html" style="color: white; text-decoration: none; margin-right:100px;">Cart </a>
+            </div>
+
+            <div id="navbar-user-area">
+                <!-- Filled by JS -->
+            </div>
+        </nav>
+    </header>
+
+    <div class="container">
+        <div class="dashboard">
+            <div class="card">
+                <h2>Seller Profile</h2>
+                <div class="profile-pic"></div>
+                <p><strong>Name:</strong> [Placeholder Name]</p>
+                <p><strong>OCCP Certificate:</strong> [Placeholder Certificate]</p>
+                <button>Update Profile</button>
+            </div>
+
+            <div class="card">
+                <h2>Manage Products</h2>
+                <div class="product-grid">
+                    <div class="product-card">
+                        <img src="images/sample_product.jpg" alt="Product 1">
+                        <p>Product 1</p>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </div>
+                    <div class="product-card">
+                        <img src="images/sample_product.jpg" alt="Product 2">
+                        <p>Product 2</p>
+                        <button>Edit</button>
+                        <button>Delete</button>
+                    </div>
+                </div>
+                <button style="margin-top: 1rem;">Add New Product</button>
+            </div>
+
+            <div class="card">
+                <h2>OCCP Certificate</h2>
+                <p>[Placeholder for OCCP document upload or status]</p>
+                <button>Upload New Certificate</button>
+            </div>
+
+            <div class="card">
+                <h2>Customer Support</h2>
+                <p>Need help? Contact AgriConnect Organic support for assistance.</p>
+                <button>Go to Support</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 AgriConnect Organic | All Rights Reserved</p>
+        <div class="translate">
+            <label for="language">Translate:</label>
+            <select id="language">
+                <option>English</option>
+                <option>Filipino</option>
+            </select>
+        </div>
+    </div>
+</body>
+
+</html>
