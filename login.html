@@ -33,7 +33,7 @@ function loginUser() {
     let userFound = users.find(u => u.email === email && u.password === pass);
 
     if (!userFound) {
-        showToast("Incorrect email or password.");
+        alert("Incorrect email or password.");
         return;
     }
 
@@ -44,4 +44,5 @@ function loginUser() {
 
 </body>
 </html>
+
 
