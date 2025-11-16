@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Account Profile</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 420px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+        }
+
+        .profile-photo {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            margin: 0 auto 20px;
+            object-fit: cover;
+            display: block;
+        }
+
+        .field {
+            margin-bottom: 18px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+        }
+
+        .field input {
+            width: 100%;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            background: #fafafa;
+        }
+
+        .password-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-btn {
+            cursor: pointer;
+            font-size: 14px;
+            color: #555;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <img id="profilePhoto" src="assets/default-profile.png" class="profile-photo" alt="Profile Photo">
+
+        <div class="field">
+            <label>Full Name</label>
+            <input id="fullName" type="text" readonly>
+        </div>
+
+        <div class="field">
+            <label>Email</label>
+            <input id="email" type="text" readonly>
+        </div>
+
+        <div class="field">
+            <label>Password</label>
+            <div class="password-row">
+                <input id="password" type="password" readonly>
+                <span class="toggle-btn" onclick="togglePassword()">Show</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Load user info (adjust based on your system)
+        const user = JSON.parse(localStorage.getItem("user") || "{}");
+
+        document.getElementById("fullName").value = user.fullName || "";
+        document.getElementById("email").value = user.email || "";
+        document.getElementById("password").value = user.password || "";
+
+        function togglePassword() {
+            const pass = document.getElementById("password");
+            const btn = document.querySelector(".toggle-btn");
+            if (pass.type === "password") {
+                pass.type = "text";
+                btn.textContent = "Hide";
+            } else {
+                pass.type = "password";
+                btn.textContent = "Show";
+            }
+        }
+    </script>
+</body>
+</html>
