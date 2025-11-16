@@ -79,6 +79,7 @@
             text-decoration: none;
             padding: 12px;
             margin-top: 25px;
+            border: none;
             border-radius: 8px;
             font-size: 1rem;
             transition: background 0.3s ease;
@@ -124,7 +125,7 @@
             <div class="summary-item total"><span>Total:</span><strong>₱<span id="total"></span></strong></div>
         </div>
 
-        <a href="home.html" class="btn">Return to Homepage</a>
+        <button class="btn" onclick="window.location.href='home.html'">Return to Homepage</button>
 
         <!-- NEW: Save as PNG button -->
         <button class="btn" onclick="saveReceiptPNG()">Save Receipt as PNG</button>
@@ -181,3 +182,4 @@
 
 </body>
 </html>
+
