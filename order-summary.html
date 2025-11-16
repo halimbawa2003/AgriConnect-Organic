@@ -4,8 +4,7 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="assets/siteLogo.png" type="image/png">
-    <title>AgriConnect Organic | Order Summary</title>
+    <title>Order Summary | AgriConnect Organic</title>
     <style>
         body {
             font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
@@ -86,7 +85,7 @@
         }
 
         .btn:hover {
-            background-color: #2f855a;
+            background-color: #276749;
         }
 
         footer {
@@ -96,40 +95,15 @@
             font-size: 0.9rem;
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", () => {
-            const navbarUserArea = document.getElementById("navbar-user-area");
-            const currentUser = JSON.parse(localStorage.getItem("agriconnect_current_user"));
 
-            function renderNavbar() {
-                if (currentUser) {
-                    navbarUserArea.innerHTML = `
-                <a href="account.html" style="color: white; text-decoration: none; margin-right:20px;">My Account (${currentUser.fullname.split(" ")[0]})</a>
-                <a href="#" id="logoutBtn" style="color: white; text-decoration: none;">Logout</a>
-            `;
-
-                    document.getElementById("logoutBtn").onclick = function () {
-                        localStorage.removeItem("agriconnect_current_user");
-                        window.location.reload();
-                    };
-                } else {
-                    navbarUserArea.innerHTML = `
-                <a href="login.html">Login</a>
-                <a href="signup.html">Sign Up</a>
-            `;
-                }
-            }
-
-            renderNavbar();
-        });
-    </script>
-
+    <!-- NEW: html2canvas library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </head>
 
 <body>
     <header>Thank you for ordering!</header>
 
-    <div class="container">
+    <div class="container" id="receiptBox">
         <h2>Order Receipt</h2>
 
         <div class="summary-section">
@@ -151,23 +125,22 @@
         </div>
 
         <a href="home.html" class="btn">Return to Homepage</a>
+
+        <!-- NEW: Save as PNG button -->
+        <button class="btn" onclick="saveReceiptPNG()">Save Receipt as PNG</button>
+
     </div>
 
     <footer>
         © 2025 AgriConnect Organic. All rights reserved.
     </footer>
 
-    <!--    <script>
-        // Display current date and time for order
-        document.getElementById("orderTime").textContent = new Date().toLocaleString();
-    </script> -->
     <script>
         const order = JSON.parse(localStorage.getItem("latestOrder") || "{}");
 
         document.getElementById("order-id").textContent = order.orderId || "N/A";
         document.getElementById("order-time").textContent = order.orderTime || "N/A";
         document.getElementById("payment-method").textContent = order.paymentMethod || "N/A";
-
         document.getElementById("total").textContent = order.total?.toFixed(2) || "0.00";
 
         const list = document.getElementById("order-items");
@@ -190,8 +163,21 @@
 
             list.appendChild(li);
         });
+
+        // NEW: Function to save receipt as PNG
+        function saveReceiptPNG() {
+            const box = document.getElementById("receiptBox");
+
+            html2canvas(box, {
+                scale: 2
+            }).then(canvas => {
+                const link = document.createElement("a");
+                link.download = `AgriConnect_Receipt_${order.orderId || "Order"}.png`;
+                link.href = canvas.toDataURL("image/png");
+                link.click();
+            });
+        }
     </script>
+
 </body>
-
 </html>
-
