@@ -240,7 +240,7 @@
         document.getElementById('add-to-cart-btn').addEventListener('click', function () {
             const qty = parseFloat(document.getElementById('qty-kg').value || 1);
 
-            if (!currentUser()) {
+            if (!currentUser) {
                 showToast(t('needSignIn'));
                 location.href = 'login.html';
                 return;
@@ -268,5 +268,6 @@
     </script>
 
 </body>
+
 
 </html>
